@@ -1,0 +1,25 @@
+main {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.wrapper {
+  display: flex;
+  height: 100%;
+}
+
+.wrapper aside {
+  background-color: #313743;
+}
+
+.navbar-list {
+  list-style: none;
+  padding: 0;
+  color: whitesmoke;
+  font-weight: 900;
+}
+
+.navbar-list li {
+  width: 200px;
+  padding: 15px;
+}
