@@ -1,7 +1,13 @@
-import type { LinksFunction } from "@remix-run/node";
-import Transaction from "~/components/transaction"
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import TransactionComponent from "~/components/transaction"
 
+import { db } from "~/utils/db.server";
 import transactionsStylesUrl from "~/styles/transactions.css";
+import type { Transaction } from "@prisma/client";
+import { useLoaderData } from "@remix-run/react";
+
+type LoaderData = { transactions: Array<{id: string, title: string, expenseDate: string, amount: string}> }
 
 export const links: LinksFunction = () => {
   return [
@@ -12,12 +18,33 @@ export const links: LinksFunction = () => {
   ];
 };
 
+export const loader: LoaderFunction = async () => {
+  const transactions = await db.transaction.findMany();
+  const data: LoaderData = {
+    transactions: transactions.map((item) => ({
+      id: item.id,
+      title: item.title,
+      expenseDate: item.expenseDate.toLocaleString(),
+      amount: Number(item.amount).toLocaleString('en', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    })),
+  };
+
+  return json(data);
+};
+
 export default function TransactionsRoute() {
+  const data = useLoaderData<LoaderData>();
+
   return (
     <div>
-      <Transaction title="Flowers" date="10/10/2022" amount={100} />
-      <Transaction title="Animals" date="10/10/2022" amount={6000} />
-      <Transaction title="Animals" date="10/10/2022" amount={2000} />
+      {data.transactions.map((transaction) =>
+          <TransactionComponent
+            key={transaction.id}
+            title={transaction.title}
+            date={transaction.expenseDate}
+            amount={transaction.amount}
+          />
+      )}
     </div>
   );
 }

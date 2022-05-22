@@ -1,8 +1,8 @@
-export default function Transaction({title, date, amount} : {title: string, date: string, amount: number}) {
+export default function Transaction({title, date, amount} : {title: string, date: string, amount: string}) {
   return (
     <div className="transaction">
       <div>
-        <p>{title}</p>
+        <p><b>{title}</b></p>
         <p>{date}</p>
       </div>
       <div>
