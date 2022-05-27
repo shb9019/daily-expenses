@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300&display=swap');
 
+:root {
+  --color-invalid: hsl(356, 100%, 71%);
+}
+
 body {
   margin: 0;
   overflow: hidden;
@@ -9,4 +13,29 @@ body {
 
 button {
   cursor: pointer;
+}
+
+.form-validation-error {
+  margin: 0;
+  margin-top: 0.25em;
+  color: var(--color-invalid);
+  font-size: 0.8rem;
+}
+
+[type="text"][aria-invalid="true"],
+[type="password"][aria-invalid="true"],
+[type="date"][aria-invalid="true"],
+[type="datetime"][aria-invalid="true"],
+[type="datetime-local"][aria-invalid="true"],
+[type="month"][aria-invalid="true"],
+[type="week"][aria-invalid="true"],
+[type="email"][aria-invalid="true"],
+[type="number"][aria-invalid="true"],
+[type="search"][aria-invalid="true"],
+[type="tel"][aria-invalid="true"],
+[type="time"][aria-invalid="true"],
+[type="url"][aria-invalid="true"],
+[type="color"][aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--color-invalid);
 }
