@@ -4,8 +4,7 @@ import TransactionComponent from "~/components/transaction"
 
 import { db } from "~/utils/db.server";
 import transactionsStylesUrl from "~/styles/transactions.css";
-import type { Transaction } from "@prisma/client";
-import { useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 
 type LoaderData = { transactions: Array<{id: string, title: string, expenseDate: string, amount: string}> }
 
@@ -36,15 +35,21 @@ export default function TransactionsRoute() {
   const data = useLoaderData<LoaderData>();
 
   return (
-    <div>
-      {data.transactions.map((transaction) =>
-          <TransactionComponent
-            key={transaction.id}
-            title={transaction.title}
-            date={transaction.expenseDate}
-            amount={transaction.amount}
-          />
-      )}
+    <div className="transactions-wrapper">
+      <div className="transactions-list">
+        {data.transactions.map((transaction) =>
+            <TransactionComponent
+              key={transaction.id}
+              title={transaction.title}
+              date={transaction.expenseDate}
+              amount={transaction.amount}
+            />
+        )}
+        <Link to="new">
+          <button type="button">Add Transaction</button>
+        </Link>
+      </div>
+      <Outlet/>
     </div>
   );
 }

@@ -1,6 +1,18 @@
+.transactions-wrapper {
+  display: flex;
+}
+
+.transactions-wrapper > div:first-child {
+  flex-grow: 1;
+}
+
 .transaction {
   display: flex;
   justify-content: space-between;
-  margin: 5px 30px;
+  margin: 5px 0px;
   border-bottom: 1px solid black;
+}
+
+.transactions-list {
+  margin: 0px 30px;
 }
