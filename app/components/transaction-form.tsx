@@ -3,7 +3,10 @@ export type TransactionFormLoaderData = {
   title: string;
   expenseDate: string;
   amount: string;
+  source: string;
 };
+
+export type SourcesData = Array<{ id: string; label: string; }>;
 
 export type TransactionFormActionData = {
   formError?: string;
@@ -11,11 +14,13 @@ export type TransactionFormActionData = {
     title: string | undefined;
     expenseDate: string | undefined;
     amount: string | undefined;
+    source: string | undefined;
   };
   fields?: {
     title: string;
     expenseDate: string;
     amount: string;
+    source: string;
   };
 };
 
@@ -28,13 +33,15 @@ export default function TransactionForm({
   actionData,
   action,
   initialTransaction,
+  sources,
 }: {
   actionData?: TransactionFormActionData;
   action: TransactionFormAction;
   initialTransaction?: TransactionFormLoaderData;
+  sources: SourcesData;
 }) {
   return (
-    <form method="post">
+    <form method="post" id="transaction-form">
       <div className="input-group">
         <label htmlFor="title">Title</label>
         <input
@@ -78,6 +85,20 @@ export default function TransactionForm({
           }
         />
       </div>
+      <div className="input-group">
+        <label htmlFor="source">Source</label>
+        <select
+          name="source"
+          form="transaction-form"
+          defaultValue={actionData?.fields?.source ?? initialTransaction?.source}
+          aria-invalid={Boolean(actionData?.fieldErrors?.source) || undefined}
+          aria-errormessage={
+            actionData?.fieldErrors?.source ? "source-error" : undefined
+          }
+        >
+          {sources.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+        </select>
+      </div>
       <input type="hidden" name="transaction-id" value={initialTransaction?.transactionId} />
       {actionData?.fieldErrors?.title ? (
         <p className="form-validation-error" role="alert" id="title-error">
@@ -96,6 +117,11 @@ export default function TransactionForm({
       {actionData?.fieldErrors?.amount ? (
         <p className="form-validation-error" role="alert" id="amount-error">
           {actionData.fieldErrors.amount}
+        </p>
+      ) : null}
+      {actionData?.fieldErrors?.source ? (
+        <p className="form-validation-error" role="alert" id="source-error">
+          {actionData.fieldErrors.source}
         </p>
       ) : null}
       {actionData?.formError ? (

@@ -1,11 +1,25 @@
 import { Link } from "@remix-run/react/node_modules/react-router-dom";
 
-export default function Transaction({id, title, date, amount} : {id: string, title: string, date: string, amount: string}) {
+export default function Transaction({
+  id,
+  title,
+  date,
+  amount,
+  source,
+}: {
+  id: string;
+  title: string;
+  date: string;
+  amount: string;
+  source: string;
+}) {
   return (
     <div className="transaction">
       <div>
-        <p><b>{title}</b></p>
-        <p>{date}</p>
+        <p>
+          <b>{title}</b>
+        </p>
+        <p><b>{source}</b> - {date}</p>
       </div>
       <div>
         <p>{amount}</p>

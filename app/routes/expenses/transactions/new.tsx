@@ -1,6 +1,6 @@
-import type { ActionFunction, LinksFunction } from "@remix-run/node";
+import type { ActionFunction, LinksFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
+import { useActionData, useLoaderData } from "@remix-run/react";
 import type { TransactionFormActionData } from "~/components/transaction-form";
 import TransactionForm, {
   TransactionFormAction,
@@ -8,6 +8,10 @@ import TransactionForm, {
 
 import newTransactionStylesUrl from "~/styles/new-transaction.css";
 import { db } from "~/utils/db.server";
+
+type LoaderData = {
+  sources: Array<{ id: string; label: string; }>;
+};
 
 export const links: LinksFunction = () => {
   return [
@@ -44,12 +48,14 @@ export const action: ActionFunction = async ({ request }) => {
   const title = form.get("title");
   const expenseDate = form.get("expense-date");
   const amount = form.get("amount");
+  const sourceId = form.get("source");
   const action = form.get("action");
 
   if (
     typeof title !== "string" ||
     typeof expenseDate !== "string" ||
     typeof amount !== "string" ||
+    typeof sourceId !== "string" ||
     action !== TransactionFormAction.ADD
   ) {
     return badRequest({
@@ -57,20 +63,24 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
+  const source = db.source.findFirst({where: {id: sourceId}});
+
   const fieldErrors = {
     title: validateTitle(title),
     expenseDate: validateExpenseDate(expenseDate),
     amount: validateAmount(amount),
+    source: !source ? "Source does not exist!" : undefined
   };
 
   if (Object.values(fieldErrors).some(Boolean)) {
-    return badRequest({ fieldErrors, fields: { title, expenseDate, amount } });
+    return badRequest({ fieldErrors, fields: { title, expenseDate, amount, source: sourceId } });
   }
 
   const fields = {
     title,
     expenseDate: new Date(expenseDate),
     amount: Number(amount),
+    sourceId
   };
   await db.transaction.create({
     data: { ...fields },
@@ -79,8 +89,18 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/expenses/transactions`);
 };
 
+export const loader: LoaderFunction = async () => {
+  const sources = await db.source.findMany();
+  const data : LoaderData = {
+    sources: sources.map((item) => ({id: item.id, label: item.label}))
+  };
+
+  return json(data);
+};
+
 export default function NewTransactionRoute() {
   const actionData = useActionData<TransactionFormActionData>();
+  const data = useLoaderData<LoaderData>();
 
   return (
     <div className="new-transaction-wrapper">
@@ -88,6 +108,7 @@ export default function NewTransactionRoute() {
       <TransactionForm
         actionData={actionData}
         action={TransactionFormAction.ADD}
+        sources={data.sources}
       />
     </div>
   );

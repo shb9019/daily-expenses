@@ -1,15 +1,27 @@
 import { PrismaClient } from "@prisma/client";
 const db = new PrismaClient();
 
+function getRandomInt(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
+
 async function seed() {
-  await Promise.all(
-    getTransactions().map((transaction) => {
-      return db.transaction.create({ data: transaction });
-    })
-  );
   await Promise.all(
     getSources().map((source) => {
       return db.source.create({ data: source });
+    })
+  );
+
+  const sources = await db.source.findMany();
+  const numSources = sources.length;
+
+  await Promise.all(
+    getTransactions().map((transaction) => {
+      return db.transaction.create({
+        data: {...transaction, sourceId: sources[getRandomInt(0, numSources)].id}
+      });
     })
   );
 }

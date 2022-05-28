@@ -41,7 +41,7 @@
   margin: 5px;
 }
 
-.input-group > input {
+.input-group > input, select {
   width: 250px;
 }
 
