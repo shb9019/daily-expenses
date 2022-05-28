@@ -1,7 +1,7 @@
 import type { ActionFunction, LoaderFunction} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import type { TransactionFormLoaderData } from "~/components/transaction-form";
+import { useActionData, useLoaderData } from "@remix-run/react";
+import type { TransactionFormActionData, TransactionFormLoaderData } from "~/components/transaction-form";
 import TransactionForm, { TransactionFormAction } from "~/components/transaction-form";
 import { badRequest } from "~/utils";
 import { db } from "~/utils/db.server";
@@ -79,6 +79,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function EditTransactionRoute() {
   const data = useLoaderData<TransactionFormLoaderData>();
+  const actionData = useActionData<TransactionFormActionData>();
 
   return (
     <div className="edit-transaction-wrapper">
@@ -86,6 +87,7 @@ export default function EditTransactionRoute() {
       <TransactionForm
         initialTransaction={data}
         action={TransactionFormAction.EDIT}
+        actionData={actionData}
       />
     </div>
   );

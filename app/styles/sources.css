@@ -48,3 +48,12 @@
   border-left: 1px solid black;
   padding: 10px;
 }
+
+.source-delete-form {
+  display: inline;
+}
+
+.source-card button {
+  margin: 2px;
+  float: right;
+}

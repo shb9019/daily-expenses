@@ -98,6 +98,14 @@ export default function TransactionForm({
           {actionData.fieldErrors.amount}
         </p>
       ) : null}
+      {actionData?.formError ? (
+        <p
+          className="form-validation-error"
+          role="alert"
+        >
+          {actionData.formError}
+        </p>
+      ) : null}
       <input type="hidden" name="action" value={action} />
       <div className="submit">
         <button type="submit" className="button">

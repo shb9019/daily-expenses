@@ -28,13 +28,13 @@ export const links: LinksFunction = () => {
   ];
 };
 
-function validateLabel(title: string) {
+export function validateLabel(title: string) {
   if (title.length == 0) {
     return "Title cannot be empty!";
   }
 }
 
-function validateDescription(description: string) {
+export function validateDescription(description: string) {
   if (description.length == 0) {
     return "Description cannot be empty!";
   }

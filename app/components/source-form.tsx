@@ -61,7 +61,7 @@ export default function SourceForm({
           }
         />
       </div>
-      <input type="hidden" name="transaction-id" value={initialSource?.sourceId} />
+      <input type="hidden" name="source-id" value={initialSource?.sourceId} />
       <input type="hidden" name="action" value={action} />
       {actionData?.fieldErrors?.label ? (
         <p className="form-validation-error" role="alert" id="label-error">
@@ -75,6 +75,14 @@ export default function SourceForm({
           id="description-error"
         >
           {actionData.fieldErrors.description}
+        </p>
+      ) : null}
+      {actionData?.formError ? (
+        <p
+          className="form-validation-error"
+          role="alert"
+        >
+          {actionData.formError}
         </p>
       ) : null}
       <div className="submit">
