@@ -13,6 +13,15 @@
   border-bottom: 1px solid black;
 }
 
+.transaction > div {
+  min-width: 100px;
+}
+
 .transactions-list {
   margin: 0px 30px;
+}
+
+.transaction button {
+  float: right;
+  margin: 2px;
 }
