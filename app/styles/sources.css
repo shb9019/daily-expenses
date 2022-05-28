@@ -21,6 +21,10 @@
   margin-bottom: 15px;
 }
 
+.source-card > .description {
+  margin-bottom: 10px;
+}
+
 .input-group {
   display: flex;
   justify-content: space-between;
