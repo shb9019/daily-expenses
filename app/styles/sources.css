@@ -1,3 +1,11 @@
+.sources-wrapper {
+  display: flex;
+}
+
+.sources-wrapper > div:first-child {
+  flex-grow: 1;
+}
+
 .source-card {
   margin: 20px;
   border: 1px solid black;
@@ -11,4 +19,28 @@
 .source-card > .title {
   font-size: 25px;
   margin-bottom: 15px;
+}
+
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.input-group > * {
+  margin: 5px;
+}
+
+.input-group > input, textarea {
+  width: 250px;
+}
+
+.submit > button {
+  margin: 5px;
+  cursor: pointer;
+}
+
+.new-source-wrapper, .edit-source-wrapper {
+  border-left: 1px solid black;
+  padding: 10px;
 }

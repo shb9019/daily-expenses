@@ -1,6 +1,6 @@
 import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import SourceCard from "~/components/source-card";
 
 import sourcesStylesUrl from "~/styles/sources.css";
@@ -32,14 +32,17 @@ export default function SourcesRoute() {
   const data = useLoaderData<LoaderData>();
 
   return (
-    <div>
-      {data.sources.map((source) => (
-        <SourceCard
-          key={source.id}
-          title={source.label}
-          description={source.description}
-        />
-      ))}
+    <div className="sources-wrapper">
+      <div>
+        {data.sources.map((source) => (
+          <SourceCard
+            key={source.id}
+            title={source.label}
+            description={source.description}
+          />
+        ))}
+      </div>
+      <Outlet/>
     </div>
   );
 }
