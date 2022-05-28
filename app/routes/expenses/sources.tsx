@@ -5,7 +5,7 @@ import type {
 } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import SourceCard from "~/components/source-card";
 
 import sourcesStylesUrl from "~/styles/sources.css";
@@ -70,14 +70,21 @@ export default function SourcesRoute() {
   return (
     <div className="sources-wrapper">
       <div>
-        {data.sources.map((source) => (
-          <SourceCard
-            key={source.id}
-            sourceId={source.id}
-            title={source.label}
-            description={source.description}
-          />
-        ))}
+        <div>
+          {data.sources.map((source) => (
+            <SourceCard
+              key={source.id}
+              sourceId={source.id}
+              title={source.label}
+              description={source.description}
+            />
+          ))}
+        </div>
+        <div className="new-source-button">
+          <Link to="new">
+            <button type="button">Create Source</button>
+          </Link>
+        </div>
       </div>
       <Outlet />
     </div>
