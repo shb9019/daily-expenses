@@ -1,5 +1,6 @@
 import type { LinksFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
+import { Link } from "@remix-run/react/node_modules/react-router-dom";
 
 import expensesStylesUrl from "~/styles/expenses.css";
 
@@ -20,9 +21,12 @@ export default function ExpensesRoute() {
           <li>
             <h2>Daily Expenses</h2>
           </li>
-          <li>Transactions</li>
-          <li>Salary Planning</li>
-          <li>Analysis</li>
+          <li>
+            <Link to="transactions">Transactions</Link>
+          </li>
+          <li>
+            <Link to="sources">Sources</Link>
+          </li>
         </ul>
       </aside>
       <main>
