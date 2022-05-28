@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react/node_modules/react-router-dom";
+
 export default function Transaction({id, title, date, amount} : {id: string, title: string, date: string, amount: string}) {
   return (
     <div className="transaction">
@@ -12,11 +14,9 @@ export default function Transaction({id, title, date, amount} : {id: string, tit
           <input type="hidden" name="action" value="delete" />
           <button type="submit">Delete</button>
         </form>
-        <form method="post">
-          <input type="hidden" name="transaction-id" value={id} />
-          <input type="hidden" name="action" value="edit" />
-          <button type="submit">Edit</button>
-        </form>
+        <Link to={`edit/${id}`}>
+          <button type="button">Edit</button>
+        </Link>
       </div>
     </div>
   );

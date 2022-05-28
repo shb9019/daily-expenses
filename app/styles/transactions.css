@@ -25,3 +25,27 @@
   float: right;
   margin: 2px;
 }
+
+.new-transaction-wrapper, .edit-transaction-wrapper {
+  border-left: 1px solid black;
+  padding: 10px;
+}
+
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.input-group > * {
+  margin: 5px;
+}
+
+.input-group > input {
+  width: 250px;
+}
+
+.submit > button {
+  margin: 5px;
+  cursor: pointer;
+}
