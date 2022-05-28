@@ -1,0 +1,14 @@
+.source-card {
+  margin: 20px;
+  border: 1px solid black;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 20px;
+  min-width: 300px;
+  max-width: 300px;
+}
+
+.source-card > .title {
+  font-size: 25px;
+  margin-bottom: 15px;
+}

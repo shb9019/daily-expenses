@@ -18,3 +18,11 @@ model Transaction {
   amount      Float
   expenseDate DateTime
 }
+
+model Source {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  label       String
+  description String
+}
