@@ -17,6 +17,9 @@ export default function ExpensesRoute() {
     <div className="wrapper">
       <aside>
         <ul className="navbar-list">
+          <li>
+            <h2>Daily Expenses</h2>
+          </li>
           <li>Transactions</li>
           <li>Salary Planning</li>
           <li>Analysis</li>
