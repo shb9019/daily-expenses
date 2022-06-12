@@ -9,6 +9,7 @@ import SourceForm, { SourceFormAction } from "~/components/source-form";
 import { badRequest } from "~/utils";
 import { db } from "~/utils/db.server";
 import { validateLabel, validateDescription } from "./new";
+import SubFormHeader from "~/components/sub-form-header";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -81,7 +82,7 @@ export default function EditSourceRoute() {
 
   return (
     <div className="edit-source-wrapper">
-      <h2>Edit Source</h2>
+      <SubFormHeader title="Edit Source" />
       <SourceForm
         initialSource={data}
         action={SourceFormAction.EDIT}

@@ -1,6 +1,7 @@
 import type { ActionFunction, LinksFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
+import SubFormHeader from "~/components/sub-form-header";
 import type { TransactionFormActionData } from "~/components/transaction-form";
 import TransactionForm, {
   TransactionFormAction,
@@ -104,7 +105,7 @@ export default function NewTransactionRoute() {
 
   return (
     <div className="new-transaction-wrapper">
-      <h2>Add Transaction</h2>
+      <SubFormHeader title="Add Transaction" />
       <TransactionForm
         actionData={actionData}
         action={TransactionFormAction.ADD}

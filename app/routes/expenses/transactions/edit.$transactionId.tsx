@@ -1,6 +1,7 @@
 import type { ActionFunction, LoaderFunction} from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
+import SubFormHeader from "~/components/sub-form-header";
 import type { SourcesData, TransactionFormActionData, TransactionFormLoaderData } from "~/components/transaction-form";
 import TransactionForm, { TransactionFormAction } from "~/components/transaction-form";
 import { badRequest } from "~/utils";
@@ -99,7 +100,7 @@ export default function EditTransactionRoute() {
 
   return (
     <div className="edit-transaction-wrapper">
-      <h2>Edit Transaction</h2>
+      <SubFormHeader title="Edit Transaction" />
       <TransactionForm
         initialTransaction={data.transaction}
         action={TransactionFormAction.EDIT}

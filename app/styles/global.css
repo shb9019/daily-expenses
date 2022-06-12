@@ -49,3 +49,8 @@ a:hover {
   font-weight: bolder;
   text-decoration: underline;
 }
+
+.sub-form-header {
+  display: flex;
+  justify-content: space-between;
+}

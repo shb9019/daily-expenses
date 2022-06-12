@@ -2,6 +2,7 @@ import type { ActionFunction, LinksFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData } from "@remix-run/react";
 import SourceForm, { SourceFormAction } from "~/components/source-form";
+import SubFormHeader from "~/components/sub-form-header";
 import { TransactionFormAction } from "~/components/transaction-form";
 
 import newTransactionStylesUrl from "~/styles/new-transaction.css";
@@ -81,7 +82,7 @@ export default function NewSourceRoute() {
 
   return (
     <div className="new-source-wrapper">
-      <h2>Add Source</h2>
+      <SubFormHeader title="Add Source" />
       <SourceForm action={SourceFormAction.ADD} actionData={actionData} />
     </div>
   );
