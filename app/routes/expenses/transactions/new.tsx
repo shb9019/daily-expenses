@@ -9,6 +9,7 @@ import TransactionForm, {
 
 import newTransactionStylesUrl from "~/styles/new-transaction.css";
 import { db } from "~/utils/db.server";
+import { requireUserId } from "~/utils/session.server";
 
 type LoaderData = {
   sources: Array<{ id: string; label: string; }>;
@@ -51,6 +52,7 @@ export const action: ActionFunction = async ({ request }) => {
   const amount = form.get("amount");
   const sourceId = form.get("source");
   const action = form.get("action");
+  const userId = await requireUserId(request);
 
   if (
     typeof title !== "string" ||
@@ -81,7 +83,8 @@ export const action: ActionFunction = async ({ request }) => {
     title,
     expenseDate: new Date(expenseDate),
     amount: Number(amount),
-    sourceId
+    sourceId,
+    userId
   };
   await db.transaction.create({
     data: { ...fields },

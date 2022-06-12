@@ -8,9 +8,18 @@ function getRandomInt(min: number, max: number) {
 }
 
 async function seed() {
+  const sai = await db.user.create({
+    data: {
+      username: "sai",
+      // this is a hashed version of "twixrox"
+      passwordHash:
+        "$2b$10$K7L1OJ45/4Y2nIvhRVpCe.FSmhDdWoXehVzJptJ/op0lSsvqNu/1u",
+    },
+  });
+
   await Promise.all(
     getSources().map((source) => {
-      return db.source.create({ data: source });
+      return db.source.create({ data: { ...source, userId: sai.id } });
     })
   );
 
@@ -20,7 +29,11 @@ async function seed() {
   await Promise.all(
     getTransactions().map((transaction) => {
       return db.transaction.create({
-        data: {...transaction, sourceId: sources[getRandomInt(0, numSources)].id}
+        data: {
+          ...transaction,
+          sourceId: sources[getRandomInt(0, numSources)].id,
+          userId: sai.id,
+        },
       });
     })
   );

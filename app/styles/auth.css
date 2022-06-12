@@ -1,0 +1,22 @@
+.auth-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+form {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 350px;
+  align-self: center;
+}
+
+form > div {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px;
+}
+
+h2 {
+  text-align: center;
+}

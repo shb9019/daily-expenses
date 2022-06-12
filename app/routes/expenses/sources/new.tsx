@@ -7,6 +7,7 @@ import { TransactionFormAction } from "~/components/transaction-form";
 
 import newTransactionStylesUrl from "~/styles/new-transaction.css";
 import { db } from "~/utils/db.server";
+import { requireUserId } from "~/utils/session.server";
 
 export type ActionData = {
   formError?: string;
@@ -48,6 +49,7 @@ export const action: ActionFunction = async ({ request }) => {
   const label = form.get("label");
   const description = form.get("description");
   const action = form.get("action");
+  const userId = await requireUserId(request);
 
   if (
     typeof label !== "string" ||
@@ -68,7 +70,7 @@ export const action: ActionFunction = async ({ request }) => {
     return badRequest({ fieldErrors, fields: { label, description } });
   }
 
-  const fields = { label, description };
+  const fields = { label, description, userId };
 
   await db.source.create({
     data: { ...fields },

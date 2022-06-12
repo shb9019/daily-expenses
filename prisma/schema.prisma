@@ -18,7 +18,9 @@ model Transaction {
   amount      Float
   expenseDate DateTime
   sourceId    String
-  source      Source @relation(fields: [sourceId], references: [id])
+  source      Source   @relation(fields: [sourceId], references: [id])
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Source {
@@ -27,5 +29,17 @@ model Source {
   updatedAt    DateTime @updatedAt
   label        String
   description  String
+  transactions Transaction[]
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  username     String   @unique
+  passwordHash String
+  sources      Source[]
   transactions Transaction[]
 }

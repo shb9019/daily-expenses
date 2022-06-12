@@ -1,6 +1,5 @@
 import type { LinksFunction } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
-import { Link } from "@remix-run/react/node_modules/react-router-dom";
+import { Link, Outlet } from "@remix-run/react";
 
 import expensesStylesUrl from "~/styles/expenses.css";
 
