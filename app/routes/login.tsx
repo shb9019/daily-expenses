@@ -1,6 +1,6 @@
-import type { ActionFunction, LinksFunction, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useActionData } from "@remix-run/react";
+import type { ActionFunction, LinksFunction, LoaderFunction} from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { useActionData, useSearchParams } from "@remix-run/react";
 import authStylesUrl from "~/styles/auth.css";
 import { createUserSession, getUserId, login } from "~/utils/session.server";
 
@@ -74,13 +74,31 @@ export const action: ActionFunction = async ({ request }) => {
   return createUserSession(user.id, redirectTo);
 };
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await getUserId(request);
+
+  if (userId !== null) {
+    return redirect("/expenses");
+  }
+
+  return null;
+};
+
 export default function Login() {
   const actionData = useActionData<ActionData>();
+  const [searchParams] = useSearchParams();
 
   return (
     <div className="auth-container">
       <form method="post">
         <h2>Login</h2>
+        <input
+            type="hidden"
+            name="redirectTo"
+            value={
+              searchParams.get("redirectTo") ?? undefined
+            }
+          />
         <div>
           <label htmlFor="username">
             <b>Username</b>

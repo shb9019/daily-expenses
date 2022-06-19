@@ -1,7 +1,8 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import { Link, Outlet } from "@remix-run/react";
 
 import expensesStylesUrl from "~/styles/expenses.css";
+import { requireUserId } from "~/utils/session.server";
 
 export const links: LinksFunction = () => {
   return [
@@ -10,6 +11,10 @@ export const links: LinksFunction = () => {
       href: expensesStylesUrl,
     },
   ];
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  return requireUserId(request);
 };
 
 export default function ExpensesRoute() {
@@ -25,6 +30,9 @@ export default function ExpensesRoute() {
           </li>
           <li>
             <Link to="sources">Sources</Link>
+          </li>
+          <li>
+            <Link to="../logout">Logout</Link>
           </li>
         </ul>
       </aside>
