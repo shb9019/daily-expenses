@@ -1,17 +1,24 @@
-import type { ActionFunction, LoaderFunction} from "@remix-run/node";
+import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
 import SubFormHeader from "~/components/sub-form-header";
-import type { SourcesData, TransactionFormActionData, TransactionFormLoaderData } from "~/components/transaction-form";
-import TransactionForm, { TransactionFormAction } from "~/components/transaction-form";
+import type {
+  SourcesData,
+  TransactionFormActionData,
+  TransactionFormLoaderData,
+} from "~/components/transaction-form";
+import TransactionForm, {
+  TransactionFormAction,
+} from "~/components/transaction-form";
 import { badRequest } from "~/utils";
 import { db } from "~/utils/db.server";
+import { requireUserId } from "~/utils/session.server";
 import { validateAmount, validateExpenseDate, validateTitle } from "./new";
 
 type LoaderData = {
   transaction: TransactionFormLoaderData;
   sources: SourcesData;
-}
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -21,6 +28,7 @@ export const action: ActionFunction = async ({ request }) => {
   const amount = form.get("amount");
   const sourceId = form.get("source");
   const action = form.get("action");
+  const userId = await requireUserId(request);
 
   if (
     typeof transactionId !== "string" ||
@@ -35,7 +43,9 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const transaction = await db.transaction.findFirst({where: {id: transactionId}});
+  const transaction = await db.transaction.findFirst({
+    where: { AND: {id: transactionId, userId} },
+  });
   if (!transaction) {
     throw new Error("Transaction does not exist");
   }
@@ -44,43 +54,49 @@ export const action: ActionFunction = async ({ request }) => {
     title: validateTitle(title),
     expenseDate: validateExpenseDate(expenseDate),
     amount: validateAmount(amount),
-    source: !sourceId ? "Source does not exist" : undefined
+    source: !sourceId ? "Source does not exist" : undefined,
   };
 
   if (Object.values(fieldErrors).some(Boolean)) {
-    return badRequest({ fieldErrors, fields: { title, expenseDate, amount, source: sourceId } });
+    return badRequest({
+      fieldErrors,
+      fields: { title, expenseDate, amount, source: sourceId },
+    });
   }
 
   const fields = {
     title,
     expenseDate: new Date(expenseDate),
     amount: Number(amount),
-    sourceId
+    sourceId,
   };
 
   await db.transaction.update({
-    where: {id: transactionId},
+    where: { id: transactionId },
     data: { ...fields },
   });
 
   return redirect("/expenses/transactions");
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const {transactionId} = params;
+export const loader: LoaderFunction = async ({ params, request }) => {
+  const { transactionId } = params;
+  const userId = await requireUserId(request);
 
   if (typeof transactionId !== "string") {
     return redirect("/expenses/transactions");
   }
 
-  const transaction = await db.transaction.findFirst({where: {id: transactionId}});
+  const transaction = await db.transaction.findFirst({
+    where: { AND: { id: transactionId, userId } },
+  });
   if (!transaction) {
     throw new Error("Transaction ID not found");
   }
 
   const sources = await db.source.findMany();
 
-  const data : LoaderData = {
+  const data: LoaderData = {
     transaction: {
       transactionId: transaction.id,
       title: transaction.title,
@@ -88,7 +104,7 @@ export const loader: LoaderFunction = async ({ params }) => {
       amount: transaction.amount.toString(),
       source: transaction.sourceId,
     },
-    sources: sources.map((item) => ({id: item.id, label: item.label}))
+    sources: sources.map((item) => ({ id: item.id, label: item.label })),
   };
 
   return json(data);

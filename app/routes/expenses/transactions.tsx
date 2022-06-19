@@ -11,6 +11,7 @@ import { db } from "~/utils/db.server";
 import transactionsStylesUrl from "~/styles/transactions.css";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { badRequest } from "~/utils";
+import { requireUserId } from "~/utils/session.server";
 
 type LoaderData = {
   transactions: Array<{
@@ -31,8 +32,10 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
   const transactions = await db.transaction.findMany({
+    where: { userId },
     orderBy: [{ expenseDate: "asc" }, { createdAt: "asc" }],
   });
 
@@ -49,7 +52,7 @@ export const loader: LoaderFunction = async () => {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }),
-      source: sourceLabelById.get(item.sourceId) ?? ""
+      source: sourceLabelById.get(item.sourceId) ?? "",
     })),
   };
 

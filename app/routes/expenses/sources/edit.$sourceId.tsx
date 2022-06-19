@@ -10,6 +10,7 @@ import { badRequest } from "~/utils";
 import { db } from "~/utils/db.server";
 import { validateLabel, validateDescription } from "./new";
 import SubFormHeader from "~/components/sub-form-header";
+import { requireUserId } from "~/utils/session.server";
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -17,6 +18,7 @@ export const action: ActionFunction = async ({ request }) => {
   const label = form.get("label");
   const description = form.get("description");
   const action = form.get("action");
+  const userId = await requireUserId(request);
 
   if (
     typeof sourceId !== "string" ||
@@ -30,7 +32,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const source = await db.source.findFirst({
-    where: { id: sourceId },
+    where: { AND: {id: sourceId, userId} },
   });
   if (!source) {
     throw new Error("Source does not exist");
@@ -55,14 +57,17 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect("/expenses/sources");
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
   const { sourceId } = params;
+  const userId = await requireUserId(request);
 
   if (typeof sourceId !== "string") {
     return redirect("/expenses/sources");
   }
 
-  const source = await db.source.findFirst({ where: { id: sourceId } });
+  const source = await db.source.findFirst({
+    where: { AND: { id: sourceId, userId } },
+  });
   if (!source) {
     throw new Error("Source ID not found");
   }

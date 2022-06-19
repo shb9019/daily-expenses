@@ -11,6 +11,7 @@ import SourceCard from "~/components/source-card";
 import sourcesStylesUrl from "~/styles/sources.css";
 import { badRequest } from "~/utils";
 import { db } from "~/utils/db.server";
+import { requireUserId } from "~/utils/session.server";
 
 type LoaderData = {
   sources: Array<{ id: string; label: string; description: string }>;
@@ -25,8 +26,9 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async () => {
-  const sources = await db.source.findMany();
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
+  const sources = await db.source.findMany({ where: { userId } });
   const data: LoaderData = {
     sources,
   };
@@ -38,6 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
   const action = form.get("action");
   const sourceId = form.get("source-id");
+  const userId = await requireUserId(request);
 
   if (typeof action !== "string" || typeof sourceId !== "string") {
     return badRequest({
@@ -45,7 +48,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const source = await db.source.findFirst({ where: { id: sourceId } });
+  const source = await db.source.findFirst({ where: { AND: {id: sourceId, userId} } });
   if (!source) {
     return badRequest({
       formError: "Source does not exist!",
